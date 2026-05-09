@@ -68,6 +68,37 @@ export function tick(state) {
     time: Date.now(),
   };
 
+  const candles = [...state.candles];
+  const lastCandle = candles[candles.length - 1];
+  const now = Math.floor(Date.now() / 1000);
+
+  if (now - lastCandle.time >= 60) {
+    candles.push({
+      time: lastCandle.time + 60,
+      open: newPrice,
+      high: newPrice,
+      low: newPrice,
+      close: newPrice,
+      volume: newTrade.qty,
+    });
+    if (candles.length > 120) candles.shift();
+  } else {
+    const updated = { ...lastCandle };
+    updated.close = newPrice;
+    updated.high = Math.max(updated.high, newPrice);
+    updated.low = Math.min(updated.low, newPrice);
+    updated.volume += newTrade.qty;
+    candles[candles.length - 1] = updated;
+  }
+
+  const orders = [...state.orders];
+  if (Math.random() < 0.1 && orders.some((o) => o.status === 'open')) {
+    const openIdx = orders.findIndex((o) => o.status === 'open');
+    if (openIdx >= 0) {
+      orders[openIdx] = { ...orders[openIdx], status: 'executed', time: Date.now() };
+    }
+  }
+
   return {
     ...state,
     lastPrice: newPrice,
@@ -76,5 +107,7 @@ export function tick(state) {
     bids: updateLevels(state.bids, 'bid'),
     asks: updateLevels(state.asks, 'ask'),
     trades: [newTrade, ...state.trades.slice(0, 19)],
+    candles,
+    orders,
   };
 }

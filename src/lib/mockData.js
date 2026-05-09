@@ -4,6 +4,14 @@ const ASSETS = {
   ITUB4: { basePrice: 34.20, name: 'Itaú Unibanco PN', change: 1.12 },
 };
 
+const TIMEFRAMES = {
+  '1m': { seconds: 60, count: 60 },
+  '5m': { seconds: 300, count: 60 },
+  '15m': { seconds: 900, count: 48 },
+  '1h': { seconds: 3600, count: 48 },
+  '1D': { seconds: 86400, count: 60 },
+};
+
 function generateLevels(basePrice, side, count = 10) {
   const levels = [];
   const tick = basePrice * 0.001;
@@ -46,6 +54,62 @@ function generateTrades(basePrice, count = 20) {
   return trades;
 }
 
+function generateCandles(basePrice, timeframe = '1m') {
+  const tf = TIMEFRAMES[timeframe];
+  const candles = [];
+  const now = Math.floor(Date.now() / 1000);
+  let price = basePrice * (0.97 + Math.random() * 0.03);
+  const volatility = timeframe === '1D' ? 0.015 : timeframe === '1h' ? 0.008 : 0.006;
+
+  for (let i = tf.count - 1; i >= 0; i--) {
+    const open = price;
+    const change = (Math.random() - 0.48) * basePrice * volatility;
+    const close = Math.round((open + change) * 100) / 100;
+    const high = Math.round((Math.max(open, close) + Math.random() * basePrice * volatility * 0.5) * 100) / 100;
+    const low = Math.round((Math.min(open, close) - Math.random() * basePrice * volatility * 0.5) * 100) / 100;
+    const volume = Math.floor(5000 + Math.random() * 50000);
+
+    candles.push({
+      time: now - i * tf.seconds,
+      open,
+      high,
+      low,
+      close,
+      volume,
+    });
+
+    price = close;
+  }
+
+  return candles;
+}
+
+function generateOrders(basePrice, assetKey) {
+  const orders = [];
+  const now = Date.now();
+  const statuses = ['executed', 'executed', 'executed', 'open', 'cancelled'];
+
+  for (let i = 0; i < 8; i++) {
+    const side = Math.random() > 0.5 ? 'buy' : 'sell';
+    const status = statuses[Math.floor(Math.random() * statuses.length)];
+    const drift = (Math.random() - 0.5) * basePrice * 0.01;
+    const price = Math.round((basePrice + drift) * 100) / 100;
+    const qty = Math.floor(100 + Math.random() * 2000);
+
+    orders.push({
+      id: `ORD-${String(1000 + i).slice(1)}${Math.floor(Math.random() * 900 + 100)}`,
+      asset: assetKey,
+      side,
+      price,
+      qty,
+      status,
+      time: now - i * 45000 - Math.floor(Math.random() * 30000),
+    });
+  }
+
+  return orders.sort((a, b) => b.time - a.time);
+}
+
 export function generateBookState(assetKey) {
   const asset = ASSETS[assetKey];
   if (!asset) throw new Error(`Asset ${assetKey} not found`);
@@ -58,8 +122,28 @@ export function generateBookState(assetKey) {
     bids: generateLevels(asset.basePrice, 'bid'),
     asks: generateLevels(asset.basePrice, 'ask'),
     trades: generateTrades(asset.basePrice),
+    candles: generateCandles(asset.basePrice, '1m'),
+    orders: generateOrders(asset.basePrice, assetKey),
   };
 }
 
+export function generateCandlesForTimeframe(basePrice, timeframe) {
+  return generateCandles(basePrice, timeframe);
+}
+
+export function generateWatchlistData() {
+  return Object.entries(ASSETS).map(([key, asset]) => {
+    const drift = (Math.random() - 0.5) * asset.basePrice * 0.005;
+    const price = Math.round((asset.basePrice + drift) * 100) / 100;
+    return {
+      asset: key,
+      name: asset.name,
+      lastPrice: price,
+      change: asset.change + Math.round((Math.random() - 0.5) * 20) / 100,
+    };
+  });
+}
+
 export const ASSET_LIST = Object.keys(ASSETS);
-export { ASSETS };
+export const TIMEFRAME_LIST = Object.keys(TIMEFRAMES);
+export { ASSETS, TIMEFRAMES };
