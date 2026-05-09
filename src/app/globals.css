@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-:root {
+:root,
+[data-theme='dark'] {
   --bg-primary: #0d0d14;
   --bg-secondary: #12121c;
   --bg-tertiary: #1a1a2e;
@@ -8,6 +9,16 @@
   --text-secondary: #8888a0;
   --green: #00c076;
   --red: #f6465d;
+}
+
+[data-theme='light'] {
+  --bg-primary: #f5f5f8;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e8e8f0;
+  --text-primary: #1a1a2e;
+  --text-secondary: #6b6b80;
+  --green: #00a566;
+  --red: #e03e50;
 }
 
 @theme inline {
@@ -38,4 +49,22 @@ body {
 
 .flash-red {
   animation: flash-red 0.6s ease-out;
+}
+
+@keyframes toast-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes toast-out {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+.toast-enter {
+  animation: toast-in 0.3s ease-out;
+}
+
+.toast-exit {
+  animation: toast-out 0.3s ease-in forwards;
 }

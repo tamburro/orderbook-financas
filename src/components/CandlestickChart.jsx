@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createChart, ColorType, CandlestickSeries, HistogramSeries } from 'lightweight-charts';
 import { TIMEFRAME_LIST } from '@/lib/mockData';
 
-export default function CandlestickChart({ candles, timeframe, onTimeframeChange }) {
+export default function CandlestickChart({ candles, timeframe, onTimeframeChange, theme }) {
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const candleSeriesRef = useRef(null);
@@ -13,26 +13,31 @@ export default function CandlestickChart({ candles, timeframe, onTimeframeChange
   useEffect(() => {
     if (!containerRef.current) return;
 
+    const isDark = theme !== 'light';
+    const bgColor = isDark ? '#12121c' : '#ffffff';
+    const textColor = isDark ? '#8888a0' : '#6b6b80';
+    const gridColor = isDark ? '#1a1a2e' : '#e8e8f0';
+
     const chart = createChart(containerRef.current, {
       layout: {
-        background: { type: ColorType.Solid, color: '#12121c' },
-        textColor: '#8888a0',
+        background: { type: ColorType.Solid, color: bgColor },
+        textColor,
         fontFamily: 'var(--font-geist-mono), ui-monospace, monospace',
         fontSize: 10,
       },
       grid: {
-        vertLines: { color: '#1a1a2e' },
-        horzLines: { color: '#1a1a2e' },
+        vertLines: { color: gridColor },
+        horzLines: { color: gridColor },
       },
       crosshair: {
-        vertLine: { color: '#4a4a6a', width: 1, style: 2 },
-        horzLine: { color: '#4a4a6a', width: 1, style: 2 },
+        vertLine: { color: isDark ? '#4a4a6a' : '#b0b0c0', width: 1, style: 2 },
+        horzLine: { color: isDark ? '#4a4a6a' : '#b0b0c0', width: 1, style: 2 },
       },
       rightPriceScale: {
-        borderColor: '#1a1a2e',
+        borderColor: gridColor,
       },
       timeScale: {
-        borderColor: '#1a1a2e',
+        borderColor: gridColor,
         timeVisible: true,
         secondsVisible: false,
       },
@@ -73,7 +78,7 @@ export default function CandlestickChart({ candles, timeframe, onTimeframeChange
       resizeObserver.disconnect();
       chart.remove();
     };
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
     if (!candleSeriesRef.current || !candles.length) return;

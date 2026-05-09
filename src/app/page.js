@@ -13,17 +13,62 @@ import Watchlist from '@/components/Watchlist';
 import OrderHistory from '@/components/OrderHistory';
 import AccountBalance from '@/components/AccountBalance';
 import Portfolio from '@/components/Portfolio';
+import ThemeToggle from '@/components/ThemeToggle';
+import PriceAlerts from '@/components/PriceAlerts';
+import Toast from '@/components/Toast';
 
 export default function Home() {
   const [asset, setAsset] = useState('PETR4');
   const [state, setState] = useState(null);
   const [selectedPrice, setSelectedPrice] = useState(null);
   const [timeframe, setTimeframe] = useState('1m');
+  const [theme, setTheme] = useState('dark');
+  const [alerts, setAlerts] = useState([]);
+  const [toasts, setToasts] = useState([]);
   const intervalRef = useRef(null);
+  const prevPricesRef = useRef({});
 
   useEffect(() => {
     setState(generateBookState(asset));
   }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  // Check alerts against current price
+  useEffect(() => {
+    if (!state) return;
+    const currentPrice = state.lastPrice;
+    const prevPrice = prevPricesRef.current[state.asset] || currentPrice;
+    prevPricesRef.current[state.asset] = currentPrice;
+
+    setAlerts((prev) => {
+      const triggered = [];
+      const remaining = prev.filter((alert) => {
+        if (alert.asset !== state.asset) return true;
+        const hit =
+          (alert.direction === 'above' && prevPrice < alert.price && currentPrice >= alert.price) ||
+          (alert.direction === 'below' && prevPrice > alert.price && currentPrice <= alert.price);
+        if (hit) triggered.push(alert);
+        return !hit;
+      });
+
+      if (triggered.length > 0) {
+        setToasts((t) => [
+          ...t,
+          ...triggered.map((a) => ({
+            id: `toast-${Date.now()}-${Math.random()}`,
+            asset: a.asset,
+            price: state.lastPrice,
+            type: a.direction === 'above' ? 'up' : 'down',
+          })),
+        ]);
+      }
+
+      return triggered.length > 0 ? remaining : prev;
+    });
+  }, [state?.lastPrice, state?.asset]);
 
   const switchAsset = useCallback((newAsset) => {
     setAsset(newAsset);
@@ -65,6 +110,18 @@ export default function Home() {
     });
   }, []);
 
+  const addAlert = useCallback((alert) => {
+    setAlerts((prev) => [...prev, { ...alert, id: `alert-${Date.now()}-${Math.random()}` }]);
+  }, []);
+
+  const removeAlert = useCallback((id) => {
+    setAlerts((prev) => prev.filter((a) => a.id !== id));
+  }, []);
+
+  const dismissToast = useCallback((id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
   useEffect(() => {
     if (!state) return;
     intervalRef.current = setInterval(() => {
@@ -78,6 +135,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen p-3 max-w-[1440px] mx-auto flex flex-col gap-3">
+      <Toast toasts={toasts} onDismiss={dismissToast} />
+
       <div className="flex items-center gap-4">
         <h1 className="text-lg font-bold tracking-tight">Base Exchange</h1>
         <PriceTicker
@@ -87,6 +146,13 @@ export default function Home() {
           change={state.change}
           priceDirection={state.priceDirection}
         />
+        <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="ml-auto w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-sm"
+          title={theme === 'dark' ? 'Tema claro' : 'Tema escuro'}
+        >
+          {theme === 'dark' ? '☀' : '☾'}
+        </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr_300px_260px] gap-3">
@@ -99,6 +165,7 @@ export default function Home() {
             candles={state.candles}
             timeframe={timeframe}
             onTimeframeChange={changeTimeframe}
+            theme={theme}
           />
           <DepthChart bids={state.bids} asks={state.asks} />
         </div>
@@ -121,6 +188,13 @@ export default function Home() {
             asset={state.asset}
             balance={state.balance}
             onPlaceOrder={placeOrder}
+          />
+          <PriceAlerts
+            asset={state.asset}
+            lastPrice={state.lastPrice}
+            alerts={alerts}
+            onAddAlert={addAlert}
+            onRemoveAlert={removeAlert}
           />
           <RecentTrades trades={state.trades} />
         </div>

@@ -148,15 +148,35 @@ export function generateCandlesForTimeframe(basePrice, timeframe) {
   return generateCandles(basePrice, timeframe);
 }
 
+function generateSparkline(basePrice, count = 20) {
+  const points = [];
+  let price = basePrice * (0.99 + Math.random() * 0.02);
+  for (let i = 0; i < count; i++) {
+    price += (Math.random() - 0.48) * basePrice * 0.003;
+    points.push(Math.round(price * 100) / 100);
+  }
+  return points;
+}
+
+const sparklineCache = {};
+
 export function generateWatchlistData() {
   return Object.entries(ASSETS).map(([key, asset]) => {
     const drift = (Math.random() - 0.5) * asset.basePrice * 0.005;
     const price = Math.round((asset.basePrice + drift) * 100) / 100;
+
+    if (!sparklineCache[key]) {
+      sparklineCache[key] = generateSparkline(asset.basePrice);
+    }
+    sparklineCache[key].shift();
+    sparklineCache[key].push(price);
+
     return {
       asset: key,
       name: asset.name,
       lastPrice: price,
       change: asset.change + Math.round((Math.random() - 0.5) * 20) / 100,
+      sparkline: [...sparklineCache[key]],
     };
   });
 }
