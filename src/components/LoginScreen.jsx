@@ -18,9 +18,9 @@ export default function LoginScreen({ onLogin }) {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-[var(--green)] mb-4">
-            <span className="text-2xl font-black text-[#0d0d14]">B</span>
+            <span className="text-2xl font-black text-[#0d0d14]">T</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">Base Exchange</h1>
+          <h1 className="text-2xl font-bold tracking-tight">TradeView</h1>
           <p className="text-sm text-[var(--text-secondary)] mt-1">
             Plataforma de negociação
           </p>

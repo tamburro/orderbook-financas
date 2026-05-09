@@ -147,7 +147,7 @@ export default function Home() {
 
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
-          <h1 className="text-lg font-bold tracking-tight">Base Exchange</h1>
+          <h1 className="text-lg font-bold tracking-tight">TradeView</h1>
           <MarketStatus />
         </div>
         <div className="w-px h-6 bg-[var(--bg-tertiary)]" />

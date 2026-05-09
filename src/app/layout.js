@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Base Exchange",
+  title: "TradeView",
   description: "Plataforma de negociação — Book de ofertas em tempo real",
 };
 
