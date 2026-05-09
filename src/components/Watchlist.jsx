@@ -42,12 +42,12 @@ export default function Watchlist({ selected, onSelect }) {
                 onClick={() => onSelect(item.asset)}
                 className={`h-8 cursor-pointer transition-colors ${
                   isSelected
-                    ? 'bg-[var(--bg-tertiary)]'
-                    : 'hover:bg-[var(--bg-tertiary)]'
+                    ? 'bg-[var(--bg-tertiary)] border-l-2 border-[var(--green)]'
+                    : 'hover:bg-[var(--bg-tertiary)] border-l-2 border-transparent'
                 }`}
               >
                 <td className="px-3">
-                  <div className="font-semibold text-[var(--text-primary)]">{item.asset}</div>
+                  <div className={`font-semibold ${isSelected ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}`}>{item.asset}</div>
                   <div className="text-[10px] text-[var(--text-secondary)] leading-tight">{item.name}</div>
                 </td>
                 <td className="px-3 text-right tabular-nums" style={{ color }}>

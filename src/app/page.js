@@ -9,6 +9,7 @@ import RecentTrades from '@/components/RecentTrades';
 import DepthChart from '@/components/DepthChart';
 import CandlestickChart from '@/components/CandlestickChart';
 import OrderPanel from '@/components/OrderPanel';
+import AssetSelector from '@/components/AssetSelector';
 import Watchlist from '@/components/Watchlist';
 import OrderHistory from '@/components/OrderHistory';
 
@@ -56,6 +57,7 @@ export default function Home() {
     <main className="min-h-screen p-3 max-w-[1440px] mx-auto flex flex-col gap-3">
       <div className="flex items-center gap-4">
         <h1 className="text-lg font-bold tracking-tight">Base Exchange</h1>
+        <AssetSelector assets={Object.keys(ASSETS)} selected={asset} onSelect={switchAsset} />
         <PriceTicker
           asset={state.asset}
           assetName={state.assetName}
