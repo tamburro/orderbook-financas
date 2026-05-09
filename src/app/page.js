@@ -9,9 +9,10 @@ import RecentTrades from '@/components/RecentTrades';
 import DepthChart from '@/components/DepthChart';
 import CandlestickChart from '@/components/CandlestickChart';
 import OrderPanel from '@/components/OrderPanel';
-import AssetSelector from '@/components/AssetSelector';
 import Watchlist from '@/components/Watchlist';
 import OrderHistory from '@/components/OrderHistory';
+import AccountBalance from '@/components/AccountBalance';
+import Portfolio from '@/components/Portfolio';
 
 export default function Home() {
   const [asset, setAsset] = useState('PETR4');
@@ -26,9 +27,31 @@ export default function Home() {
 
   const switchAsset = useCallback((newAsset) => {
     setAsset(newAsset);
-    setState(generateBookState(newAsset));
+    setState((prev) => generateBookState(newAsset, prev?.portfolio, prev?.balance));
     setSelectedPrice(null);
     setTimeframe('1m');
+  }, []);
+
+  const placeOrder = useCallback((order) => {
+    setState((prev) => {
+      if (!prev) return prev;
+      const newOrder = {
+        id: `ORD-${Date.now().toString(36).toUpperCase()}`,
+        asset: prev.asset,
+        ...order,
+        status: 'open',
+        time: Date.now(),
+      };
+      const balance = { ...prev.balance };
+      if (order.side === 'buy') {
+        balance.available = Math.round((balance.available - order.price * order.qty) * 100) / 100;
+      }
+      return {
+        ...prev,
+        orders: [newOrder, ...prev.orders],
+        balance,
+      };
+    });
   }, []);
 
   const changeTimeframe = useCallback((tf) => {
@@ -57,7 +80,6 @@ export default function Home() {
     <main className="min-h-screen p-3 max-w-[1440px] mx-auto flex flex-col gap-3">
       <div className="flex items-center gap-4">
         <h1 className="text-lg font-bold tracking-tight">Base Exchange</h1>
-        <AssetSelector assets={Object.keys(ASSETS)} selected={asset} onSelect={switchAsset} />
         <PriceTicker
           asset={state.asset}
           assetName={state.assetName}
@@ -92,15 +114,19 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-3">
+          <AccountBalance balance={state.balance} />
           <OrderPanel
             lastPrice={state.lastPrice}
             selectedPrice={selectedPrice}
             asset={state.asset}
+            balance={state.balance}
+            onPlaceOrder={placeOrder}
           />
           <RecentTrades trades={state.trades} />
         </div>
       </div>
 
+      <Portfolio portfolio={state.portfolio} />
       <OrderHistory orders={state.orders} />
     </main>
   );

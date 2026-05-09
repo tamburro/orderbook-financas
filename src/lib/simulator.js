@@ -92,10 +92,31 @@ export function tick(state) {
   }
 
   const orders = [...state.orders];
+  const portfolio = { ...state.portfolio };
+  const balance = { ...state.balance };
+
   if (Math.random() < 0.1 && orders.some((o) => o.status === 'open')) {
     const openIdx = orders.findIndex((o) => o.status === 'open');
     if (openIdx >= 0) {
-      orders[openIdx] = { ...orders[openIdx], status: 'executed', time: Date.now() };
+      const order = orders[openIdx];
+      orders[openIdx] = { ...order, status: 'executed', time: Date.now() };
+
+      const orderAsset = order.asset;
+      const pos = portfolio[orderAsset] || { qty: 0, avgPrice: 0 };
+
+      if (order.side === 'buy') {
+        const totalQty = pos.qty + order.qty;
+        const newAvg = totalQty > 0
+          ? (pos.avgPrice * pos.qty + order.price * order.qty) / totalQty
+          : 0;
+        portfolio[orderAsset] = { qty: totalQty, avgPrice: Math.round(newAvg * 100) / 100 };
+        balance.available = Math.round((balance.available - order.price * order.qty) * 100) / 100;
+      } else {
+        const totalQty = Math.max(0, pos.qty - order.qty);
+        portfolio[orderAsset] = { qty: totalQty, avgPrice: totalQty > 0 ? pos.avgPrice : 0 };
+        balance.available = Math.round((balance.available + order.price * order.qty) * 100) / 100;
+        balance.total = Math.round((balance.total + (order.price - pos.avgPrice) * order.qty) * 100) / 100;
+      }
     }
   }
 
@@ -109,5 +130,7 @@ export function tick(state) {
     trades: [newTrade, ...state.trades.slice(0, 19)],
     candles,
     orders,
+    portfolio,
+    balance,
   };
 }

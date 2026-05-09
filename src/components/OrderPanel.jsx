@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export default function OrderPanel({ lastPrice, selectedPrice, asset }) {
+export default function OrderPanel({ lastPrice, selectedPrice, asset, balance, onPlaceOrder }) {
   const [side, setSide] = useState('buy');
   const [price, setPrice] = useState('');
   const [qty, setQty] = useState('');
@@ -18,7 +18,16 @@ export default function OrderPanel({ lastPrice, selectedPrice, asset }) {
     setQty('');
   }, [asset]);
 
-  const total = price && qty ? (parseFloat(price) * parseInt(qty, 10) || 0).toFixed(2) : '0.00';
+  const parsedPrice = parseFloat(price) || 0;
+  const parsedQty = parseInt(qty, 10) || 0;
+  const total = parsedPrice * parsedQty;
+  const canPlace = parsedPrice > 0 && parsedQty > 0;
+
+  const handlePlace = () => {
+    if (!canPlace) return;
+    onPlaceOrder({ side, price: parsedPrice, qty: parsedQty });
+    setQty('');
+  };
 
   return (
     <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden">
@@ -71,15 +80,24 @@ export default function OrderPanel({ lastPrice, selectedPrice, asset }) {
 
         <div className="flex justify-between text-xs text-[var(--text-secondary)] py-1">
           <span>Total</span>
-          <span className="tabular-nums text-[var(--text-primary)]">R$ {total}</span>
+          <span className="tabular-nums text-[var(--text-primary)]">R$ {total.toFixed(2)}</span>
         </div>
 
+        {balance && (
+          <div className="flex justify-between text-[10px] text-[var(--text-secondary)]">
+            <span>Disponível</span>
+            <span className="tabular-nums">R$ {balance.available.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+          </div>
+        )}
+
         <button
+          onClick={handlePlace}
+          disabled={!canPlace}
           className={`w-full py-2.5 rounded text-sm font-semibold transition-colors ${
             side === 'buy'
               ? 'bg-[var(--green)] hover:brightness-110 text-[#0d0d14]'
               : 'bg-[var(--red)] hover:brightness-110 text-[#0d0d14]'
-          }`}
+          } ${!canPlace ? 'opacity-40 cursor-not-allowed' : ''}`}
         >
           {side === 'buy' ? 'Comprar' : 'Vender'} {asset}
         </button>

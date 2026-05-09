@@ -110,7 +110,22 @@ function generateOrders(basePrice, assetKey) {
   return orders.sort((a, b) => b.time - a.time);
 }
 
-export function generateBookState(assetKey) {
+function generatePortfolio() {
+  return {
+    PETR4: { qty: 500, avgPrice: 27.85 },
+    VALE3: { qty: 200, avgPrice: 63.10 },
+    ITUB4: { qty: 0, avgPrice: 0 },
+  };
+}
+
+function generateBalance() {
+  return {
+    total: 150000,
+    available: 112450,
+  };
+}
+
+export function generateBookState(assetKey, prevPortfolio, prevBalance) {
   const asset = ASSETS[assetKey];
   if (!asset) throw new Error(`Asset ${assetKey} not found`);
 
@@ -124,6 +139,8 @@ export function generateBookState(assetKey) {
     trades: generateTrades(asset.basePrice),
     candles: generateCandles(asset.basePrice, '1m'),
     orders: generateOrders(asset.basePrice, assetKey),
+    portfolio: prevPortfolio || generatePortfolio(),
+    balance: prevBalance || generateBalance(),
   };
 }
 
