@@ -1,103 +1,118 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const STEPS = [
   {
     target: '[data-tour="watchlist"]',
     title: 'Watchlist',
-    text: 'Acompanhe seus ativos favoritos com preços em tempo real. Clique para trocar o ativo ativo.',
-    position: 'right',
+    text: 'Acompanhe seus ativos favoritos com preços em tempo real. Clique para trocar o ativo.',
   },
   {
     target: '[data-tour="chart"]',
     title: 'Gráfico',
     text: 'Velas japonesas com múltiplos timeframes. Alterne entre 1m, 5m, 15m, 1h e diário.',
-    position: 'bottom',
   },
   {
     target: '[data-tour="orderbook"]',
     title: 'Book de Ofertas',
     text: 'Visualize a profundidade do mercado. Clique em um preço para preencher a ordem automaticamente.',
-    position: 'left',
   },
   {
     target: '[data-tour="orderpanel"]',
     title: 'Painel de Ordens',
     text: 'Envie ordens de compra e venda. O saldo e carteira atualizam em tempo real.',
-    position: 'left',
   },
   {
     target: '[data-tour="alerts"]',
     title: 'Alertas de Preço',
     text: 'Defina alertas e receba notificações quando o preço atingir seu alvo.',
-    position: 'left',
   },
 ];
+
+function getTooltipPosition(rect, tooltipW, tooltipH) {
+  const gap = 12;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  const tryRight = rect.right + gap + tooltipW < vw;
+  const tryLeft = rect.left - gap - tooltipW > 0;
+  const tryBottom = rect.bottom + gap + tooltipH < vh;
+
+  if (tryRight) {
+    return { top: Math.max(8, rect.top), left: rect.right + gap };
+  }
+  if (tryBottom) {
+    return { top: rect.bottom + gap, left: Math.min(rect.left, vw - tooltipW - 8) };
+  }
+  if (tryLeft) {
+    return { top: Math.max(8, rect.top), left: rect.left - gap - tooltipW };
+  }
+  return { top: rect.bottom + gap, left: Math.max(8, (vw - tooltipW) / 2) };
+}
 
 export default function OnboardingTour({ active, onFinish }) {
   const [step, setStep] = useState(0);
   const [pos, setPos] = useState(null);
-
-  const updatePosition = useCallback(() => {
-    if (!active) return;
-    const el = document.querySelector(STEPS[step].target);
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    setPos({ top: rect.top, left: rect.left, width: rect.width, height: rect.height });
-  }, [step, active]);
-
-  useEffect(() => {
-    if (active) setStep(0);
-  }, [active]);
-
-  useEffect(() => {
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    return () => window.removeEventListener('resize', updatePosition);
-  }, [updatePosition]);
+  const [tooltipPos, setTooltipPos] = useState(null);
+  const tooltipRef = useRef(null);
 
   useEffect(() => {
     if (active) {
-      const el = document.querySelector(STEPS[step].target);
-      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      setTimeout(updatePosition, 300);
+      setStep(0);
+      setPos(null);
+      setTooltipPos(null);
     }
-  }, [step, active, updatePosition]);
+  }, [active]);
 
-  if (!active || !pos) return null;
+  useEffect(() => {
+    if (!active) return;
+
+    const update = () => {
+      const el = document.querySelector(STEPS[step].target);
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      setPos({ top: rect.top, left: rect.left, width: rect.width, height: rect.height, right: rect.right, bottom: rect.bottom });
+    };
+
+    const timer = setTimeout(update, 100);
+    window.addEventListener('resize', update);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', update);
+    };
+  }, [step, active]);
+
+  useEffect(() => {
+    if (!pos || !tooltipRef.current) return;
+    const rect = tooltipRef.current.getBoundingClientRect();
+    setTooltipPos(getTooltipPosition(pos, rect.width, rect.height));
+  }, [pos]);
+
+  if (!active) return null;
 
   const current = STEPS[step];
   const isLast = step === STEPS.length - 1;
 
-  let tooltipStyle = {};
-  const gap = 12;
-  if (current.position === 'right') {
-    tooltipStyle = { top: pos.top, left: pos.left + pos.width + gap };
-  } else if (current.position === 'left') {
-    tooltipStyle = { top: pos.top, left: pos.left - 280 - gap };
-  } else if (current.position === 'bottom') {
-    tooltipStyle = { top: pos.top + pos.height + gap, left: pos.left };
-  }
-
   return (
-    <div className="fixed inset-0 z-[100]">
-      <div className="absolute inset-0 bg-black/60" onClick={onFinish} />
+    <div className="fixed inset-0 z-[100]" onClick={onFinish}>
+      {pos && (
+        <div
+          className="absolute rounded-lg ring-2 ring-[var(--green)] z-[101] pointer-events-none"
+          style={{
+            top: pos.top - 4,
+            left: pos.left - 4,
+            width: pos.width + 8,
+            height: pos.height + 8,
+            boxShadow: '0 0 0 9999px rgba(0,0,0,0.6)',
+          }}
+        />
+      )}
 
       <div
-        className="absolute rounded-lg ring-2 ring-[var(--green)] z-[101] pointer-events-none"
-        style={{
-          top: pos.top - 4,
-          left: pos.left - 4,
-          width: pos.width + 8,
-          height: pos.height + 8,
-          boxShadow: '0 0 0 9999px rgba(0,0,0,0.55)',
-        }}
-      />
-
-      <div
-        className="absolute z-[102] w-[280px] bg-[var(--bg-secondary)] border border-[var(--bg-tertiary)] rounded-xl p-4 shadow-2xl"
-        style={tooltipStyle}
+        ref={tooltipRef}
+        className="fixed z-[102] w-[280px] bg-[var(--bg-secondary)] border border-[var(--bg-tertiary)] rounded-xl p-4 shadow-2xl"
+        style={tooltipPos ? { top: tooltipPos.top, left: tooltipPos.left } : { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-2">
