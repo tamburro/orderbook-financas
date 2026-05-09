@@ -25,6 +25,7 @@ export default function OrderHistory({ orders }) {
           <thead>
             <tr className="text-[var(--text-secondary)]">
               <th className="px-2 py-1.5 text-left font-medium">Hora</th>
+              <th className="px-2 py-1.5 text-left font-medium">Ativo</th>
               <th className="px-2 py-1.5 text-left font-medium">Lado</th>
               <th className="px-2 py-1.5 text-right font-medium">Preço</th>
               <th className="px-2 py-1.5 text-right font-medium">Qtd</th>
@@ -40,6 +41,9 @@ export default function OrderHistory({ orders }) {
                 <tr key={order.id} className="h-7 hover:bg-[var(--bg-tertiary)] transition-colors">
                   <td className="px-2 tabular-nums text-[var(--text-secondary)]">
                     {formatTime(order.time)}
+                  </td>
+                  <td className="px-2 font-semibold">
+                    {order.asset}
                   </td>
                   <td className="px-2 font-medium" style={{ color: sideColor }}>
                     {order.side === 'buy' ? 'C' : 'V'}

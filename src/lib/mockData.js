@@ -141,6 +141,9 @@ export function generateBookState(assetKey, prevPortfolio, prevBalance) {
     orders: generateOrders(asset.basePrice, assetKey),
     portfolio: prevPortfolio || generatePortfolio(),
     balance: prevBalance || generateBalance(),
+    livePrices: Object.fromEntries(
+      Object.entries(ASSETS).map(([key, a]) => [key, a.basePrice])
+    ),
   };
 }
 

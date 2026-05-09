@@ -93,7 +93,7 @@ export default function CandlestickChart({ candles, timeframe, onTimeframeChange
     );
 
     chartRef.current?.timeScale().fitContent();
-  }, [candles]);
+  }, [candles, theme]);
 
   return (
     <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden">

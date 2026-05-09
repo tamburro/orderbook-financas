@@ -14,6 +14,7 @@ export default function RecentTrades({ trades }) {
       <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] text-sm font-semibold">
         Negociações Recentes
       </div>
+      <div className="max-h-[240px] overflow-y-auto">
       <table className="w-full text-xs">
         <thead>
           <tr className="text-[var(--text-secondary)]">
@@ -41,6 +42,7 @@ export default function RecentTrades({ trades }) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

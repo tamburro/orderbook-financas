@@ -132,5 +132,9 @@ export function tick(state) {
     orders,
     portfolio,
     balance,
+    livePrices: {
+      ...state.livePrices,
+      [state.asset]: newPrice,
+    },
   };
 }

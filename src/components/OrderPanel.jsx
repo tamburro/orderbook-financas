@@ -63,7 +63,7 @@ export default function OrderPanel({ lastPrice, selectedPrice, asset, balance, o
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             placeholder={lastPrice?.toFixed(2)}
-            className="w-full bg-[var(--bg-tertiary)] border border-[#2a2a3e] rounded px-3 py-2 text-sm tabular-nums text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:border-[#4a4a6a]"
+            className="w-full bg-[var(--bg-tertiary)] border border-[var(--bg-tertiary)] rounded px-3 py-2 text-sm tabular-nums text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:border-[var(--text-secondary)]"
           />
         </div>
 
@@ -74,7 +74,7 @@ export default function OrderPanel({ lastPrice, selectedPrice, asset, balance, o
             value={qty}
             onChange={(e) => setQty(e.target.value)}
             placeholder="0"
-            className="w-full bg-[var(--bg-tertiary)] border border-[#2a2a3e] rounded px-3 py-2 text-sm tabular-nums text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:border-[#4a4a6a]"
+            className="w-full bg-[var(--bg-tertiary)] border border-[var(--bg-tertiary)] rounded px-3 py-2 text-sm tabular-nums text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:border-[var(--text-secondary)]"
           />
         </div>
 
@@ -93,6 +93,7 @@ export default function OrderPanel({ lastPrice, selectedPrice, asset, balance, o
         <button
           onClick={handlePlace}
           disabled={!canPlace}
+          title={!canPlace ? 'Preencha preço e quantidade' : ''}
           className={`w-full py-2.5 rounded text-sm font-semibold transition-colors ${
             side === 'buy'
               ? 'bg-[var(--green)] hover:brightness-110 text-[#0d0d14]'

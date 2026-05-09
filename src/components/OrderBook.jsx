@@ -97,8 +97,8 @@ export default function OrderBook({ bids, asks, lastPrice, priceDirection, onCli
   const arrow = priceDirection === 'up' ? '▲' : priceDirection === 'down' ? '▼' : '';
 
   return (
-    <div className="flex flex-col bg-[var(--bg-secondary)] rounded-lg overflow-hidden">
-      <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] flex items-center justify-between">
+    <div className="flex flex-col bg-[var(--bg-secondary)] rounded-lg overflow-hidden h-[520px]">
+      <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] flex items-center justify-between flex-shrink-0">
         <span className="text-sm font-semibold">Order Book</span>
         <div className="flex gap-0.5 bg-[var(--bg-primary)] rounded p-0.5">
           {GROUP_OPTIONS.map((opt) => (
@@ -117,22 +117,29 @@ export default function OrderBook({ bids, asks, lastPrice, priceDirection, onCli
         </div>
       </div>
 
-      <table className="w-full text-xs">
-        <thead>
-          <tr className="text-[var(--text-secondary)]">
-            <th className="px-2 py-1.5 text-right font-medium">Preço</th>
-            <th className="px-2 py-1.5 text-right font-medium">Qtd</th>
-            <th className="px-2 py-1.5 text-right font-medium">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {[...groupedAsks].reverse().map((level, i) => (
-            <Row key={`ask-${i}`} level={level} side="ask" maxTotal={maxAskTotal} onClickPrice={onClickPrice} />
-          ))}
-        </tbody>
-      </table>
+      <div className="flex-shrink-0">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="text-[var(--text-secondary)]">
+              <th className="px-2 py-1.5 text-right font-medium">Preço</th>
+              <th className="px-2 py-1.5 text-right font-medium">Qtd</th>
+              <th className="px-2 py-1.5 text-right font-medium">Total</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
 
-      <div className="flex items-center justify-between px-3 py-2 border-y border-[var(--bg-tertiary)]">
+      <div className="flex-1 overflow-y-auto min-h-0">
+        <table className="w-full text-xs">
+          <tbody>
+            {[...groupedAsks].reverse().map((level, i) => (
+              <Row key={`ask-${i}`} level={level} side="ask" maxTotal={maxAskTotal} onClickPrice={onClickPrice} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex items-center justify-between px-3 py-2 border-y border-[var(--bg-tertiary)] flex-shrink-0">
         <span className="text-lg font-bold tabular-nums" style={{ color: priceColor }}>
           {arrow} {formatPrice(lastPrice)}
         </span>
@@ -141,13 +148,15 @@ export default function OrderBook({ bids, asks, lastPrice, priceDirection, onCli
         </span>
       </div>
 
-      <table className="w-full text-xs">
-        <tbody>
-          {groupedBids.map((level, i) => (
-            <Row key={`bid-${i}`} level={level} side="bid" maxTotal={maxBidTotal} onClickPrice={onClickPrice} />
-          ))}
-        </tbody>
-      </table>
+      <div className="flex-1 overflow-y-auto min-h-0">
+        <table className="w-full text-xs">
+          <tbody>
+            {groupedBids.map((level, i) => (
+              <Row key={`bid-${i}`} level={level} side="bid" maxTotal={maxBidTotal} onClickPrice={onClickPrice} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

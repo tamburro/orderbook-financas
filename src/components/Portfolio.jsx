@@ -6,11 +6,11 @@ function formatCurrency(n) {
   return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-export default function Portfolio({ portfolio }) {
+export default function Portfolio({ portfolio, livePrices }) {
   const positions = Object.entries(portfolio)
     .filter(([, pos]) => pos.qty > 0)
     .map(([asset, pos]) => {
-      const currentPrice = ASSETS[asset].basePrice;
+      const currentPrice = livePrices?.[asset] || ASSETS[asset].basePrice;
       const pnl = (currentPrice - pos.avgPrice) * pos.qty;
       const pnlPct = ((currentPrice - pos.avgPrice) / pos.avgPrice) * 100;
       return { asset, name: ASSETS[asset].name, ...pos, currentPrice, pnl, pnlPct };

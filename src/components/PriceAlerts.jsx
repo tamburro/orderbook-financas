@@ -28,7 +28,7 @@ export default function PriceAlerts({ asset, lastPrice, alerts, onAddAlert, onRe
             onChange={(e) => setTargetPrice(e.target.value)}
             placeholder={lastPrice?.toFixed(2)}
             onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-            className="flex-1 bg-[var(--bg-tertiary)] border border-[#2a2a3e] rounded px-2 py-1.5 text-xs tabular-nums text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:border-[#4a4a6a]"
+            className="flex-1 bg-[var(--bg-tertiary)] border border-[var(--bg-tertiary)] rounded px-2 py-1.5 text-xs tabular-nums text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:border-[var(--text-secondary)]"
           />
           <button
             onClick={handleAdd}

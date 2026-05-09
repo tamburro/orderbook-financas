@@ -145,9 +145,12 @@ export default function Home() {
       <Toast toasts={toasts} onDismiss={dismissToast} />
       <OnboardingTour active={showTour} onFinish={() => setShowTour(false)} />
 
-      <div className="flex items-center gap-4">
-        <h1 className="text-lg font-bold tracking-tight">Base Exchange</h1>
-        <MarketStatus />
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <h1 className="text-lg font-bold tracking-tight">Base Exchange</h1>
+          <MarketStatus />
+        </div>
+        <div className="w-px h-6 bg-[var(--bg-tertiary)]" />
         <PriceTicker
           asset={state.asset}
           assetName={state.assetName}
@@ -165,15 +168,23 @@ export default function Home() {
           </button>
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-sm"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             title={theme === 'dark' ? 'Tema claro' : 'Tema escuro'}
           >
-            {theme === 'dark' ? '☀' : '☾'}
+            {theme === 'dark' ? (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            )}
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr_300px_260px] gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr_300px_260px] gap-3">
         <div className="flex flex-col gap-3" data-tour="watchlist">
           <Watchlist selected={asset} onSelect={switchAsset} />
         </div>
@@ -222,7 +233,7 @@ export default function Home() {
         </div>
       </div>
 
-      <Portfolio portfolio={state.portfolio} />
+      <Portfolio portfolio={state.portfolio} livePrices={state.livePrices} />
       <OrderHistory orders={state.orders} />
     </main>
   );
