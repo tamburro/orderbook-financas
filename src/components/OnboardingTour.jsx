@@ -48,6 +48,10 @@ export default function OnboardingTour({ active, onFinish }) {
   }, [step, active]);
 
   useEffect(() => {
+    if (active) setStep(0);
+  }, [active]);
+
+  useEffect(() => {
     updatePosition();
     window.addEventListener('resize', updatePosition);
     return () => window.removeEventListener('resize', updatePosition);
@@ -94,6 +98,7 @@ export default function OnboardingTour({ active, onFinish }) {
       <div
         className="absolute z-[102] w-[280px] bg-[var(--bg-secondary)] border border-[var(--bg-tertiary)] rounded-xl p-4 shadow-2xl"
         style={tooltipStyle}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-bold text-[var(--green)]">{current.title}</span>
