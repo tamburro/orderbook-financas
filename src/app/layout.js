@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Order Book",
-  description: "Book de ofertas em tempo real — PETR4, VALE3, ITUB4",
+  title: "Base Exchange",
+  description: "Plataforma de negociação — Book de ofertas em tempo real",
 };
 
 export default function RootLayout({ children }) {

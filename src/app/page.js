@@ -13,11 +13,15 @@ import Watchlist from '@/components/Watchlist';
 import OrderHistory from '@/components/OrderHistory';
 import AccountBalance from '@/components/AccountBalance';
 import Portfolio from '@/components/Portfolio';
-import ThemeToggle from '@/components/ThemeToggle';
 import PriceAlerts from '@/components/PriceAlerts';
 import Toast from '@/components/Toast';
+import LoginScreen from '@/components/LoginScreen';
+import OnboardingTour from '@/components/OnboardingTour';
+import MarketStatus from '@/components/MarketStatus';
 
 export default function Home() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [showTour, setShowTour] = useState(false);
   const [asset, setAsset] = useState('PETR4');
   const [state, setState] = useState(null);
   const [selectedPrice, setSelectedPrice] = useState(null);
@@ -29,14 +33,16 @@ export default function Home() {
   const prevPricesRef = useRef({});
 
   useEffect(() => {
-    setState(generateBookState(asset));
-  }, []);
+    if (loggedIn) {
+      setState(generateBookState(asset));
+      setShowTour(true);
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  // Check alerts against current price
   useEffect(() => {
     if (!state) return;
     const currentPrice = state.lastPrice;
@@ -131,14 +137,17 @@ export default function Home() {
     return () => clearInterval(intervalRef.current);
   }, [asset, state !== null]);
 
+  if (!loggedIn) return <LoginScreen onLogin={() => setLoggedIn(true)} />;
   if (!state) return null;
 
   return (
     <main className="min-h-screen p-3 max-w-[1440px] mx-auto flex flex-col gap-3">
       <Toast toasts={toasts} onDismiss={dismissToast} />
+      <OnboardingTour active={showTour} onFinish={() => setShowTour(false)} />
 
       <div className="flex items-center gap-4">
         <h1 className="text-lg font-bold tracking-tight">Base Exchange</h1>
+        <MarketStatus />
         <PriceTicker
           asset={state.asset}
           assetName={state.assetName}
@@ -146,21 +155,30 @@ export default function Home() {
           change={state.change}
           priceDirection={state.priceDirection}
         />
-        <button
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="ml-auto w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-sm"
-          title={theme === 'dark' ? 'Tema claro' : 'Tema escuro'}
-        >
-          {theme === 'dark' ? '☀' : '☾'}
-        </button>
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            onClick={() => setShowTour(true)}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-sm"
+            title="Tour guiado"
+          >
+            ?
+          </button>
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-sm"
+            title={theme === 'dark' ? 'Tema claro' : 'Tema escuro'}
+          >
+            {theme === 'dark' ? '☀' : '☾'}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr_300px_260px] gap-3">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3" data-tour="watchlist">
           <Watchlist selected={asset} onSelect={switchAsset} />
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3" data-tour="chart">
           <CandlestickChart
             candles={state.candles}
             timeframe={timeframe}
@@ -170,7 +188,7 @@ export default function Home() {
           <DepthChart bids={state.bids} asks={state.asks} />
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3" data-tour="orderbook">
           <OrderBook
             bids={state.bids}
             asks={state.asks}
@@ -182,20 +200,24 @@ export default function Home() {
 
         <div className="flex flex-col gap-3">
           <AccountBalance balance={state.balance} />
-          <OrderPanel
-            lastPrice={state.lastPrice}
-            selectedPrice={selectedPrice}
-            asset={state.asset}
-            balance={state.balance}
-            onPlaceOrder={placeOrder}
-          />
-          <PriceAlerts
-            asset={state.asset}
-            lastPrice={state.lastPrice}
-            alerts={alerts}
-            onAddAlert={addAlert}
-            onRemoveAlert={removeAlert}
-          />
+          <div data-tour="orderpanel">
+            <OrderPanel
+              lastPrice={state.lastPrice}
+              selectedPrice={selectedPrice}
+              asset={state.asset}
+              balance={state.balance}
+              onPlaceOrder={placeOrder}
+            />
+          </div>
+          <div data-tour="alerts">
+            <PriceAlerts
+              asset={state.asset}
+              lastPrice={state.lastPrice}
+              alerts={alerts}
+              onAddAlert={addAlert}
+              onRemoveAlert={removeAlert}
+            />
+          </div>
           <RecentTrades trades={state.trades} />
         </div>
       </div>
