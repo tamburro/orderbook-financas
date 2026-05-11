@@ -238,17 +238,15 @@ export default function Home() {
 
         {/* Painel lateral */}
         <div className="flex flex-col gap-2 sm:gap-3">
-          <div className="grid grid-cols-2 lg:grid-cols-1 gap-2 sm:gap-3">
-            <AccountBalance balance={state.balance} />
-            <div data-tour="orderpanel">
-              <OrderPanel
-                lastPrice={state.lastPrice}
-                selectedPrice={selectedPrice}
-                asset={state.asset}
-                balance={state.balance}
-                onPlaceOrder={placeOrder}
-              />
-            </div>
+          <AccountBalance balance={state.balance} />
+          <div data-tour="orderpanel">
+            <OrderPanel
+              lastPrice={state.lastPrice}
+              selectedPrice={selectedPrice}
+              asset={state.asset}
+              balance={state.balance}
+              onPlaceOrder={placeOrder}
+            />
           </div>
           <div data-tour="alerts">
             <PriceAlerts
