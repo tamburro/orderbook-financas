@@ -6,14 +6,14 @@ export default function PriceTicker({ asset, assetName, lastPrice, change, price
   const arrow = priceDirection === 'up' ? '▲' : priceDirection === 'down' ? '▼' : '–';
 
   return (
-    <div className="flex items-center gap-3 bg-[var(--bg-secondary)] rounded-lg px-4 py-2 flex-1">
-      <span className="text-sm font-bold">{asset}</span>
-      <span className="text-xs text-[var(--text-secondary)] hidden sm:inline">{assetName}</span>
-      <div className="ml-auto flex items-center gap-3">
-        <span className="text-base font-bold tabular-nums" style={{ color }}>
-          {arrow} R$ {lastPrice.toFixed(2)}
+    <div className="flex items-center gap-2 sm:gap-3 bg-[var(--bg-secondary)] rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 flex-1 min-w-0">
+      <span className="text-xs sm:text-sm font-bold shrink-0">{asset}</span>
+      <span className="text-xs text-[var(--text-secondary)] hidden sm:inline truncate">{assetName}</span>
+      <div className="ml-auto flex items-center gap-2 sm:gap-3 shrink-0">
+        <span className="text-sm sm:text-base font-bold tabular-nums" style={{ color }}>
+          {arrow} {lastPrice.toFixed(2)}
         </span>
-        <span className="text-xs tabular-nums px-1.5 py-0.5 rounded" style={{ color, background: `${color}15` }}>
+        <span className="text-[10px] sm:text-xs tabular-nums px-1 sm:px-1.5 py-0.5 rounded" style={{ color, background: `${color}15` }}>
           {isUp ? '+' : ''}{change.toFixed(2)}%
         </span>
       </div>

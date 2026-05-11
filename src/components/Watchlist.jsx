@@ -46,10 +46,39 @@ export default function Watchlist({ selected, onSelect }) {
 
   return (
     <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden">
-      <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] text-sm font-semibold">
+      <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] text-sm font-semibold hidden lg:block">
         Watchlist
       </div>
-      <div className="flex flex-col">
+      {/* Mobile: horizontal scroll */}
+      <div className="flex lg:hidden overflow-x-auto gap-0 scrollbar-none">
+        {data.map((item) => {
+          const isUp = item.change >= 0;
+          const color = isUp ? 'var(--green)' : 'var(--red)';
+          const isSelected = item.asset === selected;
+
+          return (
+            <div
+              key={item.asset}
+              onClick={() => onSelect(item.asset)}
+              className={`flex items-center gap-2 px-3 py-2 cursor-pointer transition-colors shrink-0 ${
+                isSelected
+                  ? 'bg-[var(--bg-tertiary)] border-b-2 border-[var(--green)]'
+                  : 'border-b-2 border-transparent'
+              }`}
+            >
+              <span className={`text-xs font-semibold ${isSelected ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}`}>
+                {item.asset}
+              </span>
+              <Sparkline data={item.sparkline} color={color} width={40} height={16} />
+              <span className="text-[11px] tabular-nums font-medium" style={{ color }}>
+                {item.lastPrice.toFixed(2)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      {/* Desktop: vertical list */}
+      <div className="hidden lg:flex flex-col">
         {data.map((item) => {
           const isUp = item.change >= 0;
           const color = isUp ? 'var(--green)' : 'var(--red)';

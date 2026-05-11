@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 export default function Toast({ toasts, onDismiss }) {
   return (
-    <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+    <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-[calc(100vw-16px)]">
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onDismiss={onDismiss} />
       ))}
@@ -31,7 +31,7 @@ function ToastItem({ toast, onDismiss }) {
 
   return (
     <div
-      className={`pointer-events-auto bg-[var(--bg-secondary)] border rounded-lg px-4 py-3 shadow-lg min-w-[280px] cursor-pointer ${exiting ? 'toast-exit' : 'toast-enter'}`}
+      className={`pointer-events-auto bg-[var(--bg-secondary)] border rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 shadow-lg w-[260px] sm:w-[280px] cursor-pointer ${exiting ? 'toast-exit' : 'toast-enter'}`}
       style={{ borderColor }}
       onClick={() => setExiting(true)}
     >

@@ -91,3 +91,10 @@ body {
 *::-webkit-scrollbar-thumb:hover {
   background: var(--text-secondary);
 }
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

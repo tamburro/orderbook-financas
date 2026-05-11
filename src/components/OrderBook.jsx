@@ -97,7 +97,7 @@ export default function OrderBook({ bids, asks, lastPrice, priceDirection, onCli
   const arrow = priceDirection === 'up' ? '▲' : priceDirection === 'down' ? '▼' : '';
 
   return (
-    <div className="flex flex-col bg-[var(--bg-secondary)] rounded-lg overflow-hidden h-[520px]">
+    <div className="flex flex-col bg-[var(--bg-secondary)] rounded-lg overflow-hidden h-[380px] sm:h-[520px]">
       <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] flex items-center justify-between flex-shrink-0">
         <span className="text-sm font-semibold">Order Book</span>
         <div className="flex gap-0.5 bg-[var(--bg-primary)] rounded p-0.5">

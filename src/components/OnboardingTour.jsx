@@ -111,8 +111,8 @@ export default function OnboardingTour({ active, onFinish }) {
 
       <div
         ref={tooltipRef}
-        className="fixed z-[102] w-[280px] bg-[var(--bg-secondary)] border border-[var(--bg-tertiary)] rounded-xl p-4 shadow-2xl"
-        style={tooltipPos ? { top: tooltipPos.top, left: tooltipPos.left } : { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+        className="fixed z-[102] w-[calc(100vw-24px)] sm:w-[280px] max-w-[280px] bg-[var(--bg-secondary)] border border-[var(--bg-tertiary)] rounded-xl p-3 sm:p-4 shadow-2xl"
+        style={tooltipPos ? { top: Math.min(tooltipPos.top, window.innerHeight - 160), left: Math.max(12, Math.min(tooltipPos.left, window.innerWidth - 292)) } : { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-2">

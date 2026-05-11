@@ -115,7 +115,7 @@ export default function CandlestickChart({ candles, timeframe, onTimeframeChange
           ))}
         </div>
       </div>
-      <div ref={containerRef} className="h-[250px]" />
+      <div ref={containerRef} className="h-[200px] sm:h-[250px]" />
     </div>
   );
 }
