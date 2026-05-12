@@ -10,8 +10,8 @@ function formatTime(ts) {
 
 export default function RecentTrades({ trades }) {
   return (
-    <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden">
-      <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] text-sm font-semibold">
+    <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden border border-[var(--hairline)]">
+      <div className="px-3 py-2 border-b border-[var(--hairline)] text-sm font-semibold">
         Negociações Recentes
       </div>
       <div className="max-h-[240px] overflow-y-auto">

@@ -14,9 +14,9 @@ export default function CandlestickChart({ candles, timeframe, onTimeframeChange
     if (!containerRef.current) return;
 
     const isDark = theme !== 'light';
-    const bgColor = isDark ? '#12121c' : '#ffffff';
-    const textColor = isDark ? '#8888a0' : '#6b6b80';
-    const gridColor = isDark ? '#1a1a2e' : '#e8e8f0';
+    const bgColor = isDark ? '#1e2329' : '#ffffff';
+    const textColor = '#707a8a';
+    const gridColor = isDark ? '#2b3139' : '#eaecef';
 
     const chart = createChart(containerRef.current, {
       layout: {
@@ -46,11 +46,11 @@ export default function CandlestickChart({ candles, timeframe, onTimeframeChange
     });
 
     const candleSeries = chart.addSeries(CandlestickSeries, {
-      upColor: '#00c076',
+      upColor: '#0ecb81',
       downColor: '#f6465d',
-      borderUpColor: '#00c076',
+      borderUpColor: '#0ecb81',
       borderDownColor: '#f6465d',
-      wickUpColor: '#00c076',
+      wickUpColor: '#0ecb81',
       wickDownColor: '#f6465d',
     });
 
@@ -88,7 +88,7 @@ export default function CandlestickChart({ candles, timeframe, onTimeframeChange
       candles.map((c) => ({
         time: c.time,
         value: c.volume,
-        color: c.close >= c.open ? 'rgba(0,192,118,0.3)' : 'rgba(246,70,93,0.3)',
+        color: c.close >= c.open ? 'rgba(14,203,129,0.3)' : 'rgba(246,70,93,0.3)',
       }))
     );
 
@@ -96,8 +96,8 @@ export default function CandlestickChart({ candles, timeframe, onTimeframeChange
   }, [candles, theme]);
 
   return (
-    <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden">
-      <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] flex items-center justify-between">
+    <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden border border-[var(--hairline)]">
+      <div className="px-3 py-2 border-b border-[var(--hairline)] flex items-center justify-between">
         <span className="text-sm font-semibold">Gráfico</span>
         <div className="flex gap-0.5 bg-[var(--bg-primary)] rounded p-0.5">
           {TIMEFRAME_LIST.map((tf) => (

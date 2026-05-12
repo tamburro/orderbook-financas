@@ -97,8 +97,8 @@ export default function OrderBook({ bids, asks, lastPrice, priceDirection, onCli
   const arrow = priceDirection === 'up' ? '▲' : priceDirection === 'down' ? '▼' : '';
 
   return (
-    <div className="flex flex-col bg-[var(--bg-secondary)] rounded-lg overflow-hidden h-[380px] sm:h-[520px]">
-      <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] flex items-center justify-between flex-shrink-0">
+    <div className="flex flex-col bg-[var(--bg-secondary)] rounded-lg overflow-hidden h-[380px] sm:h-[520px] border border-[var(--hairline)]">
+      <div className="px-3 py-2 border-b border-[var(--hairline)] flex items-center justify-between flex-shrink-0">
         <span className="text-sm font-semibold">Order Book</span>
         <div className="flex gap-0.5 bg-[var(--bg-primary)] rounded p-0.5">
           {GROUP_OPTIONS.map((opt) => (
@@ -139,7 +139,7 @@ export default function OrderBook({ bids, asks, lastPrice, priceDirection, onCli
         </table>
       </div>
 
-      <div className="flex items-center justify-between px-3 py-2 border-y border-[var(--bg-tertiary)] flex-shrink-0">
+      <div className="flex items-center justify-between px-3 py-2 border-y border-[var(--hairline)] flex-shrink-0">
         <span className="text-lg font-bold tabular-nums" style={{ color: priceColor }}>
           {arrow} {formatPrice(lastPrice)}
         </span>

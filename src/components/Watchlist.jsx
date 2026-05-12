@@ -45,8 +45,8 @@ export default function Watchlist({ selected, onSelect }) {
   if (!data) return null;
 
   return (
-    <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden">
-      <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] text-sm font-semibold hidden lg:block">
+    <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden border border-[var(--hairline)]">
+      <div className="px-3 py-2 border-b border-[var(--hairline)] text-sm font-semibold hidden lg:block">
         Watchlist
       </div>
       {/* Mobile: horizontal scroll */}
@@ -62,7 +62,7 @@ export default function Watchlist({ selected, onSelect }) {
               onClick={() => onSelect(item.asset)}
               className={`flex items-center gap-2 px-3 py-2 cursor-pointer transition-colors shrink-0 ${
                 isSelected
-                  ? 'bg-[var(--bg-tertiary)] border-b-2 border-[var(--green)]'
+                  ? 'bg-[var(--bg-tertiary)] border-b-2 border-[var(--yellow)]'
                   : 'border-b-2 border-transparent'
               }`}
             >
@@ -90,7 +90,7 @@ export default function Watchlist({ selected, onSelect }) {
               onClick={() => onSelect(item.asset)}
               className={`flex items-center gap-2 px-3 py-2 cursor-pointer transition-colors ${
                 isSelected
-                  ? 'bg-[var(--bg-tertiary)] border-l-2 border-[var(--green)]'
+                  ? 'bg-[var(--bg-tertiary)] border-l-2 border-[var(--yellow)]'
                   : 'hover:bg-[var(--bg-tertiary)] border-l-2 border-transparent'
               }`}
             >

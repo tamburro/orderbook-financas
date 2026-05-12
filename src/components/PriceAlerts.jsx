@@ -15,8 +15,8 @@ export default function PriceAlerts({ asset, lastPrice, alerts, onAddAlert, onRe
   const assetAlerts = alerts.filter((a) => a.asset === asset);
 
   return (
-    <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden">
-      <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] text-sm font-semibold">
+    <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden border border-[var(--hairline)]">
+      <div className="px-3 py-2 border-b border-[var(--hairline)] text-sm font-semibold">
         Alertas
       </div>
       <div className="p-3 flex flex-col gap-2">
@@ -28,11 +28,11 @@ export default function PriceAlerts({ asset, lastPrice, alerts, onAddAlert, onRe
             onChange={(e) => setTargetPrice(e.target.value)}
             placeholder={lastPrice?.toFixed(2)}
             onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-            className="flex-1 bg-[var(--bg-tertiary)] border border-[var(--bg-tertiary)] rounded px-2 py-1.5 text-xs tabular-nums text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:border-[var(--text-secondary)]"
+            className="flex-1 bg-[var(--bg-tertiary)] border border-[var(--hairline)] rounded-md px-2 py-1.5 text-xs tabular-nums text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:border-[var(--yellow)]"
           />
           <button
             onClick={handleAdd}
-            className="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            className="px-3 py-1.5 rounded-md text-xs font-semibold bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
           >
             +
           </button>

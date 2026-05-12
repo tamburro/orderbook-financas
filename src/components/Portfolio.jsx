@@ -19,8 +19,8 @@ export default function Portfolio({ portfolio, livePrices }) {
   const totalPnl = positions.reduce((sum, p) => sum + p.pnl, 0);
 
   return (
-    <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden">
-      <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] flex items-center justify-between">
+    <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden border border-[var(--hairline)]">
+      <div className="px-3 py-2 border-b border-[var(--hairline)] flex items-center justify-between">
         <span className="text-sm font-semibold">Carteira</span>
         {positions.length > 0 && (
           <span

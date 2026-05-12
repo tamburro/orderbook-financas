@@ -31,7 +31,7 @@ function ToastItem({ toast, onDismiss }) {
 
   return (
     <div
-      className={`pointer-events-auto bg-[var(--bg-secondary)] border rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 shadow-lg w-[260px] sm:w-[280px] cursor-pointer ${exiting ? 'toast-exit' : 'toast-enter'}`}
+      className={`pointer-events-auto bg-[var(--bg-secondary)] border border-[var(--hairline)] rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 shadow-lg w-[260px] sm:w-[280px] cursor-pointer ${exiting ? 'toast-exit' : 'toast-enter'}`}
       style={{ borderColor }}
       onClick={() => setExiting(true)}
     >

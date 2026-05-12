@@ -98,7 +98,7 @@ export default function OnboardingTour({ active, onFinish }) {
     <div className="fixed inset-0 z-[100]" onClick={onFinish}>
       {pos && (
         <div
-          className="absolute rounded-lg ring-2 ring-[var(--green)] z-[101] pointer-events-none"
+          className="absolute rounded-lg ring-2 ring-[var(--yellow)] z-[101] pointer-events-none"
           style={{
             top: pos.top - 4,
             left: pos.left - 4,
@@ -111,12 +111,12 @@ export default function OnboardingTour({ active, onFinish }) {
 
       <div
         ref={tooltipRef}
-        className="fixed z-[102] w-[calc(100vw-24px)] sm:w-[280px] max-w-[280px] bg-[var(--bg-secondary)] border border-[var(--bg-tertiary)] rounded-xl p-3 sm:p-4 shadow-2xl"
+        className="fixed z-[102] w-[calc(100vw-24px)] sm:w-[280px] max-w-[280px] bg-[var(--bg-secondary)] border border-[var(--hairline)] rounded-lg p-3 sm:p-4 shadow-2xl"
         style={tooltipPos ? { top: Math.min(tooltipPos.top, window.innerHeight - 160), left: Math.max(12, Math.min(tooltipPos.left, window.innerWidth - 292)) } : { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-bold text-[var(--green)]">{current.title}</span>
+          <span className="text-xs font-bold text-[var(--yellow)]">{current.title}</span>
           <span className="text-[10px] text-[var(--text-secondary)] tabular-nums">
             {step + 1}/{STEPS.length}
           </span>
@@ -142,7 +142,7 @@ export default function OnboardingTour({ active, onFinish }) {
             )}
             <button
               onClick={() => isLast ? onFinish() : setStep(step + 1)}
-              className="px-3 py-1 rounded text-xs font-semibold bg-[var(--green)] text-[#0d0d14]"
+              className="px-3 py-1 rounded-md text-xs font-semibold bg-[var(--yellow)] text-[#181a20]"
             >
               {isLast ? 'Concluir' : 'Próximo'}
             </button>

@@ -6,8 +6,8 @@ function formatCurrency(n) {
 
 export default function AccountBalance({ balance }) {
   return (
-    <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden">
-      <div className="px-3 py-2 border-b border-[var(--bg-tertiary)] text-sm font-semibold">
+    <div className="bg-[var(--bg-secondary)] rounded-lg overflow-hidden border border-[var(--hairline)]">
+      <div className="px-3 py-2 border-b border-[var(--hairline)] text-sm font-semibold">
         Conta
       </div>
       <div className="p-3 flex flex-col gap-2">

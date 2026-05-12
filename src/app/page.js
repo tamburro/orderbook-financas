@@ -148,7 +148,7 @@ export default function Home() {
       {/* Header — mobile: 2 linhas, desktop: 1 linha */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
         <div className="flex items-center gap-2">
-          <h1 className="text-base sm:text-lg font-bold tracking-tight">TradeView</h1>
+          <h1 className="text-base sm:text-lg font-bold tracking-tight text-[var(--yellow)]">TradeView</h1>
           <MarketStatus />
           <div className="ml-auto flex sm:hidden items-center gap-2">
             <button
